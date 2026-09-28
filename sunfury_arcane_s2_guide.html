@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>성난태양 비법 딜사이클 · 한밤 2시즌 (12.1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F3FA; --surface:#FFFFFF; --ink:#1E1936; --muted:#5E5878; --line:#D9D4EA;
+  --arcane:#5B3FD1; --arcane-soft:#ECE7FF; --sun:#A8560A; --sun-soft:#FCEBD6;
+  --good:#1F7A4D; --good-soft:#E1F3E9; --warn:#A33B2B; --warn-soft:#FBE6E2;
+  --serif:"Gowun Batang","Nanum Myeongjo","AppleMyungjo",serif;
+  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#15122A; --surface:#1E1A38; --ink:#ECE9F8; --muted:#A7A1C2; --line:#342E57;
+    --arcane:#B39BFF; --arcane-soft:#2A2350; --sun:#F2A541; --sun-soft:#3A2A17;
+    --good:#6FD39E; --good-soft:#173528; --warn:#FF8A75; --warn-soft:#3D1E1A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15122A; --surface:#1E1A38; --ink:#ECE9F8; --muted:#A7A1C2; --line:#342E57;
+  --arcane:#B39BFF; --arcane-soft:#2A2350; --sun:#F2A541; --sun-soft:#3A2A17;
+  --good:#6FD39E; --good-soft:#173528; --warn:#FF8A75; --warn-soft:#3D1E1A;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum"}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 80px}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.3;letter-spacing:-.01em}
+h1{font-size:clamp(28px,5vw,42px);margin:0 0 10px}
+h2{font-size:26px;margin:72px 0 8px;padding-top:12px;border-top:2px solid var(--ink)}
+h3{font-size:19px;margin:36px 0 8px}
+p{margin:0 0 14px;max-width:68ch}
+a{color:var(--arcane)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.lede{color:var(--muted);font-size:17px}
+.src{color:var(--muted);font-size:14px}
+header.hero{padding:48px 0 8px}
+
+/* salvo meter: the one memorable element */
+.meter{margin:28px 0 8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 18px 16px}
+.meter h2.m{all:unset;display:block;font-family:var(--serif);font-size:18px;font-weight:700;margin-bottom:4px}
+.meter .hint{color:var(--muted);font-size:14px;margin-bottom:14px}
+.cells{display:grid;grid-template-columns:repeat(25,1fr);gap:3px}
+.cell{appearance:none;border:0;padding:0;height:38px;border-radius:4px;background:var(--arcane-soft);cursor:pointer;position:relative;color:transparent;font:inherit}
+.cell.on{background:var(--arcane)}
+.cell.cap.on{background:var(--sun)}
+.cell:hover{filter:brightness(1.1)}
+.ticks{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;margin-top:6px;font-size:11px;color:var(--muted);text-align:center}
+.ticks span{white-space:nowrap;overflow:visible}
+.marks{position:relative;height:44px;margin-top:4px;font-size:12px}
+.mk{position:absolute;top:0;transform:translateX(-50%);text-align:center;color:var(--muted);line-height:1.25;white-space:nowrap}
+.mk::before{content:"";display:block;width:2px;height:10px;background:currentColor;margin:0 auto 3px}
+.mk.sun{color:var(--sun)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}
+.ro{border-left:3px solid var(--arcane);padding:2px 0 2px 10px}
+.ro b{display:block;font-size:24px;font-family:var(--serif);line-height:1.2}
+.ro small{color:var(--muted);font-size:13px}
+.ro.sun{border-color:var(--sun)}
+
+/* tables */
+.tbl{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:14px;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr.key td{background:var(--sun-soft)}
+.pos{color:var(--good);font-weight:600}
+.neg{color:var(--warn);font-weight:600}
+
+/* callouts */
+.note{border-left:4px solid var(--arcane);background:var(--arcane-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.note.sun{border-color:var(--sun);background:var(--sun-soft)}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.note p:last-child{margin-bottom:0}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid currentColor;margin-left:6px;vertical-align:2px}
+.tag.ok{color:var(--good)} .tag.wait{color:var(--sun)}
+
+/* toc */
+nav.toc{margin:24px 0 0;font-size:15px}
+nav.toc ol{margin:0;padding-left:22px;columns:2;column-gap:32px}
+@media (max-width:560px){nav.toc ol{columns:1}}
+
+/* priority list */
+ol.prio{padding-left:0;list-style:none;counter-reset:p;margin:12px 0}
+ol.prio li{counter-increment:p;position:relative;padding:10px 0 10px 44px;border-bottom:1px dashed var(--line)}
+ol.prio li::before{content:counter(p);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--bg);font-weight:700;display:grid;place-items:center;font-size:14px}
+
+/* soul timeline */
+.tl{margin:18px 0}
+.tlbar{display:flex;height:44px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.tlbar div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;text-align:center;line-height:1.2;padding:0 4px}
+.z1{background:var(--arcane-soft);color:var(--ink)}
+.z2{background:var(--bg);color:var(--ink)}
+.z3{background:var(--sun-soft);color:var(--ink)}
+.z4{background:var(--warn-soft);color:var(--warn)}
+.z5{background:var(--arcane);color:var(--bg)}
+.tlaxis{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+ol.steps{padding-left:22px}
+ol.steps li{margin-bottom:10px}
+ol.steps li b{font-family:var(--serif)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px}
+pre{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;white-space:pre}
+footer{margin-top:64px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>성난태양 비법 딜사이클</h1>
+  <p class="lede">한밤 2시즌 (12.1) · 비전 연사를 기준으로 확률, 피해, 딜사이클, 비전의 영혼 준비를 한 곳에 정리했습니다. 수치는 SimulationCraft midnight 브랜치, 루나쿼츠 레이드봇 심 9건, 악성의 바쉬니크 신화 킬 로그를 대조한 결과입니다.</p>
+
+  <section class="meter" aria-labelledby="meter-t">
+    <h2 class="m" id="meter-t">연사 중첩별 탄막 한 방</h2>
+    <p class="hint">칸을 누르면 그 중첩에서 탄막을 쓸 때의 값이 표시됩니다.</p>
+    <div class="cells" id="cells" role="group" aria-label="비전 연사 중첩 선택"></div>
+    <div class="ticks" aria-hidden="true" id="ticks"></div>
+    <div class="marks" aria-hidden="true">
+      <span class="mk" style="left:calc(100%*11.5/25)">12<br>기본 APL</span>
+      <span class="mk" style="left:calc(100%*13.5/25)">14<br>신화 기준</span>
+      <span class="mk" style="left:calc(100%*23.5/25)">24<br>Preheat</span>
+      <span class="mk sun" style="left:calc(100%*24.5/25)">25<br>직관력</span>
+    </div>
+    <div class="readout" aria-live="polite">
+      <div class="ro"><small>탄막 피해 배율</small><b id="r-mult">×2.19</b></div>
+      <div class="ro"><small>오색 화살 발동</small><b id="r-pb">50%</b></div>
+      <div class="ro"><small>보주 탄막 발동</small><b id="r-orb">100%</b></div>
+      <div class="ro sun"><small>유성 파편</small><b id="r-met">6개</b></div>
+    </div>
+  </section>
+
+  <nav class="toc" aria-label="목차">
+    <ol>
+      <li><a href="#s1">핵심 결론</a></li>
+      <li><a href="#s2">비전 연사 기본</a></li>
+      <li><a href="#s3">확률 표</a></li>
+      <li><a href="#s4">피해 표</a></li>
+      <li><a href="#s5">딜사이클</a></li>
+      <li><a href="#move">이동·패턴 대응</a></li>
+      <li><a href="#s6">자주 헷갈리는 상황</a></li>
+      <li><a href="#s7">비전의 영혼 준비</a></li>
+      <li><a href="#s8">내 로그 리뷰</a></li>
+      <li><a href="#s9">검증 현황과 추가 심</a></li>
+      <li><a href="#s10">용어</a></li>
+    </ol>
+  </nav>
+</header>
+
+<main>
+<h2 id="s1">핵심 결론</h2>
+<ol class="steps">
+  <li><b>Preheat 방식이 기본 APL보다 높습니다.</b> 루나쿼츠 기준 1타겟 +0.59%, 5타겟 +1.28%입니다. 사람이 할 수 있게 바꾼 버전도 +0.45%, +1.14%를 유지합니다.</li>
+  <li><b>끊기 규칙은 한 줄이면 됩니다.</b> "비전의 영혼이 뜨면 신비한 화살을 즉시 끊고 탄막." 원본 대비 손실은 0.15% 정도입니다.</li>
+  <li><b>오색 화살 기대 개수는 탄막을 어떻게 나눠 치든 같습니다.</b> 소모한 연사 총량에 비례합니다. 차이는 25 초과 낭비, 오색을 들고 탄막 치는 낭비에서 납니다.</li>
+  <li><b>영혼 직전 2GCD에는 탄막 금지, 영혼 중에는 20야드 이내.</b> 25야드를 넘으면 운석 스냅샷 버그로 운석 한 묶음이 사라지는 것을 로그로 확인했습니다.</li>
+  <li><b>진입 목표는 연사 20 이상, 충전물 4, 번뜩임 0, 오색 없음.</b> 20과 25의 차이는 2~3%지만, 직전 탄막으로 0에서 들어가면 영혼 가치가 35~40% 줄어듭니다.</li>
+</ol>
+
+<h2 id="s2">비전 연사 기본</h2>
+<p>비전 연사를 소모하는 것은 비전 탄막 하나뿐입니다. 나머지 스킬은 연사를 쌓는 역할만 합니다. 연사에는 지속시간이 없고, 성난태양은 비전화염 연사로 최대치가 25입니다.</p>
+<div class="tbl"><table>
+<thead><tr><th>스킬</th><th>연사 획득</th><th>조건</th></tr></thead>
+<tbody>
+<tr><td>신비한 화살</td><td>파동당 +1</td><td>기본</td></tr>
+<tr><td>└ 집중의 수정</td><td>파동당 50%로 +1</td><td>특성</td></tr>
+<tr><td>└ 과부하된 투사체</td><td>파동당 +3 추가</td><td>버프 중 (비전화염 연사 포함)</td></tr>
+<tr><td>비전 작렬 · 비전 파동</td><td>+2</td><td>정신 확장</td></tr>
+<tr><td>오색 화살</td><td>+4</td><td>정신 확장</td></tr>
+<tr><td>비전 보주</td><td>+1</td><td>정신 확장</td></tr>
+<tr><td>비전의 영혼 중 탄막</td><td>+5, 소모 안 함</td><td>성난태양</td></tr>
+</tbody></table></div>
+<div class="note sun"><p><b>로그 실측: 신비한 화살 1회 = 파동 약 8회, 연사 약 11~12</b> (29회 중앙값 11, 평균 12.1). SimC의 5파동 가정보다 많습니다. 두 번 연속이면 22~24 근처라, 25에 한두 칸 못 미치는 경우가 흔한 게 정상입니다. 과부하된 투사체가 붙으면 한 번에 25가 됩니다.</p></div>
+
+<h2 id="s3">확률 표</h2>
+
+<h3>오색 화살: 탄막 1회당 발동 확률</h3>
+<div class="tbl"><table>
+<thead><tr><th class="n">탄막 시 연사</th><th class="n">정점 1~2랭크 (1%/중첩)</th><th class="n">정점 3랭크 (2%/중첩)</th></tr></thead>
+<tbody>
+<tr><td class="n">5</td><td class="n">5%</td><td class="n">10%</td></tr>
+<tr><td class="n">10</td><td class="n">10%</td><td class="n">20%</td></tr>
+<tr><td class="n">12</td><td class="n">12%</td><td class="n">24%</td></tr>
+<tr><td class="n">15</td><td class="n">15%</td><td class="n">30%</td></tr>
+<tr><td class="n">20</td><td class="n">20%</td><td class="n">40%</td></tr>
+<tr><td class="n">24</td><td class="n">24%</td><td class="n">48%</td></tr>
+<tr class="key"><td class="n">25</td><td class="n">25%</td><td class="n">50%</td></tr>
+</tbody></table></div>
+<p>판정은 시전당 한 번이고 치명타와 무관합니다. 이미 오색 화살이 있으면 새 발동은 갱신만 되어 사실상 버려집니다.</p>
+
+<h3>비전의 영혼: 25중첩 탄막 연타 누적 확률</h3>
+<div class="tbl"><table>
+<thead><tr><th class="n">영혼 중 탄막</th><th class="n">오색 화살 1회 이상</th><th class="n">과부하된 투사체 1회 이상</th></tr></thead>
+<tbody>
+<tr><td class="n">1</td><td class="n">50.0%</td><td class="n">25.0%</td></tr>
+<tr><td class="n">2</td><td class="n">75.0%</td><td class="n">43.8%</td></tr>
+<tr><td class="n">3</td><td class="n">87.5%</td><td class="n">57.8%</td></tr>
+<tr class="key"><td class="n">4</td><td class="n">93.8%</td><td class="n">68.4%</td></tr>
+<tr><td class="n">5</td><td class="n">96.9%</td><td class="n">76.3%</td></tr>
+</tbody></table></div>
+
+<h3>번뜩임: 발동원</h3>
+<div class="tbl"><table>
+<thead><tr><th>발동원</th><th class="n">확률</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>비전 쇄도</td><td class="n">100%</td><td></td></tr>
+<tr><td>비전의 여파</td><td class="n">100%</td><td>에이그윈의 기술</td></tr>
+<tr><td>비전의 영혼 중 탄막</td><td class="n">100%</td><td>탄막마다</td></tr>
+<tr><td>오색 화살</td><td class="n">50% / 100%</td><td>정점 2랭크 1점 / 2점</td></tr>
+<tr><td>유성 파편 적중</td><td class="n">5%</td><td>화염계</td></tr>
+<tr><td>일반 시전</td><td class="n">누적형</td><td>아래 표</td></tr>
+</tbody></table></div>
+
+<h3>번뜩임: 일반 시전 누적 확률 (SimC 모델)</h3>
+<p>툴팁은 12%지만 매 시전 고정이 아닙니다. 실패할수록 n × 약 1.87%로 오르고, 무작위 발동 시에만 초기화됩니다. 보장 발동(쇄도, 오색 등)은 카운터를 초기화하지 않습니다.</p>
+<div class="tbl"><table>
+<thead><tr><th class="n">마지막 발동 후 n번째 시전</th><th class="n">그 시전 확률</th><th class="n">n회 안에 1회 이상</th><th class="n">그 시전 과부하 확률</th></tr></thead>
+<tbody>
+<tr><td class="n">1</td><td class="n">1.9%</td><td class="n">1.9%</td><td class="n">0.5%</td></tr>
+<tr><td class="n">3</td><td class="n">5.6%</td><td class="n">10.8%</td><td class="n">1.4%</td></tr>
+<tr><td class="n">5</td><td class="n">9.3%</td><td class="n">25.2%</td><td class="n">2.3%</td></tr>
+<tr class="key"><td class="n">8</td><td class="n">14.9%</td><td class="n">50.9%</td><td class="n">3.7%</td></tr>
+<tr><td class="n">10</td><td class="n">18.7%</td><td class="n">66.8%</td><td class="n">4.7%</td></tr>
+<tr><td class="n">12</td><td class="n">22.4%</td><td class="n">79.5%</td><td class="n">5.6%</td></tr>
+<tr><td class="n">15</td><td class="n">28.0%</td><td class="n">91.8%</td><td class="n">7.0%</td></tr>
+<tr><td class="n">20</td><td class="n">37.4%</td><td class="n">98.9%</td><td class="n">9.3%</td></tr>
+</tbody></table></div>
+
+<h3>과부하된 투사체</h3>
+<p>번뜩임을 얻을 때마다 25%로 판정합니다. 발동원은 가리지 않습니다. 비전 쇄도·비전의 여파·오색 화살(2점)·영혼 탄막은 각각 25%, 오색 화살 1점은 12.5%, 유성 파편은 1.25%입니다.</p>
+
+<h3>연쇄: 탄막 한 번에서 출발 (정점 풀투자)</h3>
+<div class="tbl"><table>
+<thead><tr><th class="n">탄막 시 연사</th><th class="n">오색 화살</th><th class="n">→ 번뜩임</th><th class="n">→ 과부하된 투사체</th></tr></thead>
+<tbody>
+<tr><td class="n">12</td><td class="n">24%</td><td class="n">24%</td><td class="n">6.0%</td></tr>
+<tr><td class="n">20</td><td class="n">40%</td><td class="n">40%</td><td class="n">10.0%</td></tr>
+<tr class="key"><td class="n">25</td><td class="n">50%</td><td class="n">50%</td><td class="n">12.5%</td></tr>
+</tbody></table></div>
+
+<h2 id="s4">피해 표</h2>
+
+<h3>연사 중첩별 탄막</h3>
+<p>탄막 배율 = (1 + 0.03 × 연사) × (25중첩이면 직관력 1.25). 충전물, 특화, 오색 화살 3랭크 +15% 같은 공통 배율은 중첩과 무관해 빠져 있습니다.</p>
+<div class="tbl"><table>
+<thead><tr><th class="n">연사</th><th class="n">탄막 배율</th><th class="n">25+직관력 대비</th><th class="n">오색 화살</th><th class="n">보주 탄막</th><th class="n">유성 파편</th></tr></thead>
+<tbody>
+<tr><td class="n">5</td><td class="n">×1.15</td><td class="n">52.6%</td><td class="n">10%</td><td class="n">20%</td><td class="n">2</td></tr>
+<tr><td class="n">10</td><td class="n">×1.30</td><td class="n">59.4%</td><td class="n">20%</td><td class="n">40%</td><td class="n">3</td></tr>
+<tr><td class="n">12</td><td class="n">×1.36</td><td class="n">62.2%</td><td class="n">24%</td><td class="n">48%</td><td class="n">3</td></tr>
+<tr><td class="n">14</td><td class="n">×1.42</td><td class="n">64.9%</td><td class="n">28%</td><td class="n">56%</td><td class="n">3</td></tr>
+<tr><td class="n">15</td><td class="n">×1.45</td><td class="n">66.3%</td><td class="n">30%</td><td class="n">60%</td><td class="n">4</td></tr>
+<tr><td class="n">20</td><td class="n">×1.60</td><td class="n">73.1%</td><td class="n">40%</td><td class="n">80%</td><td class="n">5</td></tr>
+<tr><td class="n">24</td><td class="n">×1.72</td><td class="n">78.6%</td><td class="n">48%</td><td class="n">96%</td><td class="n">5</td></tr>
+<tr class="key"><td class="n">25</td><td class="n">×2.19</td><td class="n">100%</td><td class="n">50%</td><td class="n">100%</td><td class="n">6</td></tr>
+</tbody></table></div>
+<p class="src">유성 파편 = 5중첩당 1개 + 1개(버그). 로그에서 연사 20~24 탄막은 5개, 25 탄막은 6개가 최빈값으로 확인됐습니다. 24→25 한 칸이 +27%로, 일반 중첩 한 칸의 약 9배 가치입니다.</p>
+<h3>로그: 연사별 실제 탄막 피해</h3>
+<p class="src">영혼 밖 탄막, 보스 주 대상 비치명 피해. 표본이 작고 충전물·버프 상태가 섞여 있어 경향만 봅니다.</p>
+<div class="tbl"><table>
+<thead><tr><th class="n">탄막 시 연사</th><th class="n">표본</th><th class="n">비치명 중앙값</th><th class="n">25 대비</th></tr></thead>
+<tbody>
+<tr><td class="n">14 미만</td><td class="n">8</td><td class="n">8.1만</td><td class="n">57%</td></tr>
+<tr><td class="n">14~19</td><td class="n">4</td><td class="n">8.9만</td><td class="n">62%</td></tr>
+<tr><td class="n">20~24</td><td class="n">9</td><td class="n">10.7만</td><td class="n">76%</td></tr>
+<tr class="key"><td class="n">25</td><td class="n">18</td><td class="n">14.2만</td><td class="n">100%</td></tr>
+<tr><td>비교: 비전 작렬 1회</td><td class="n">26</td><td class="n">6.9만</td><td class="n">—</td></tr>
+</tbody></table></div>
+<p>배율 표의 예측(14 미만 약 52~62%, 20~24 약 73~79%)과 잘 맞습니다. 연사가 낮은 탄막도 작렬 한 번보다는 셉니다. 영혼 밖 탄막 74회 중 절반(37회)이 25에서 나갔습니다.</p>
+
+<h3>로그: 스킬별 피해 비중</h3>
+<p class="src">악성의 바쉬니크 신화 킬 (6분 35초), 루나쿼츠. 총 1억 2,066만 피해, 평균 약 30.5만 DPS.</p>
+<div class="tbl"><table>
+<thead><tr><th>스킬</th><th class="n">총 피해</th><th class="n">전체 비중</th><th class="n">보스 단일 비중</th><th class="n">치명타율</th></tr></thead>
+<tbody>
+<tr><td>신비한 화살</td><td class="n">4,204만</td><td class="n">34.8%</td><td class="n">33.7%</td><td class="n">27%</td></tr>
+<tr><td>비전 탄막</td><td class="n">2,465만</td><td class="n">20.4%</td><td class="n">23.3%</td><td class="n">38%</td></tr>
+<tr><td>오색 화살</td><td class="n">2,219만</td><td class="n">18.4%</td><td class="n">18.9%</td><td class="n">33%</td></tr>
+<tr><td>유성 파편</td><td class="n">847만</td><td class="n">7.0%</td><td class="n">5.5%</td><td class="n">24%</td></tr>
+<tr><td>비전 보주</td><td class="n">649만</td><td class="n">5.4%</td><td class="n">3.2%</td><td class="n">19%</td></tr>
+<tr><td>비전의 여파</td><td class="n">628만</td><td class="n">5.2%</td><td class="n">6.5%</td><td class="n">—</td></tr>
+<tr><td>비전 작렬</td><td class="n">358만</td><td class="n">3.0%</td><td class="n">4.6%</td><td class="n">28%</td></tr>
+<tr><td>비전 불사조 (전체)</td><td class="n">약 504만</td><td class="n">4.2%</td><td class="n">2.6%</td><td class="n">—</td></tr>
+</tbody></table></div>
+
+<h3>로그: 시전 1회당 피해</h3>
+<div class="tbl"><table>
+<thead><tr><th>스킬</th><th class="n">시전 수</th><th class="n">시전당 (전체)</th><th class="n">시전당 (보스)</th><th class="n">시전시간</th></tr></thead>
+<tbody>
+<tr class="key"><td>오색 화살</td><td class="n">31</td><td class="n">71.6만</td><td class="n">46.8만</td><td class="n">약 1.8초</td></tr>
+<tr><td>비전의 여파</td><td class="n">9</td><td class="n">69.8만</td><td class="n">55.6만</td><td class="n">즉시</td></tr>
+<tr><td>신비한 화살</td><td class="n">103</td><td class="n">40.8만</td><td class="n">25.2만</td><td class="n">채널 약 1.5초</td></tr>
+<tr><td>비전 탄막</td><td class="n">89</td><td class="n">27.7만</td><td class="n">20.2만</td><td class="n">즉시 (GCD 약 1.1초)</td></tr>
+<tr><td>비전 작렬</td><td class="n">36</td><td class="n">9.9만</td><td class="n">9.9만</td><td class="n">약 1.15초</td></tr>
+<tr><td>유성 파편 (1개)</td><td class="n">533개</td><td class="n">1.6만</td><td class="n">—</td><td class="n">탄막 착탄 1초 후</td></tr>
+</tbody></table></div>
+<p>오색 화살은 초당 피해로도 1위입니다(보스 기준 약 26만/초, 작렬은 약 8.6만/초). 그래서 오색 화살을 들고 탄막을 치거나 영혼에서 날리는 손실이 큽니다.</p>
+
+<h3>레이드봇 비교 (루나쿼츠)</h3>
+<div class="tbl"><table>
+<thead><tr><th>조건</th><th class="n">기본 APL</th><th class="n">Preheat 원본</th><th class="n">수정 (영혼 뜨면 끊기)</th></tr></thead>
+<tbody>
+<tr><td>1타겟</td><td class="n">196,073</td><td class="n">197,235 <span class="pos">+0.59%</span></td><td class="n">196,950 <span class="pos">+0.45%</span></td></tr>
+<tr><td>3타겟 (1분)</td><td class="n">528,514</td><td class="n">532,899 <span class="pos">+0.83%</span></td><td class="n">532,101 <span class="pos">+0.68%</span></td></tr>
+<tr><td>5타겟 (1분)</td><td class="n">813,432</td><td class="n">823,867 <span class="pos">+1.28%</span></td><td class="n">822,688 <span class="pos">+1.14%</span></td></tr>
+</tbody></table></div>
+<p class="src">DPS Error(95%)는 1타겟 약 ±98, 3타겟 ±397, 5타겟 ±650. 수정 vs 기본은 모든 조건에서 유의미하고, 원본 vs 수정은 1타겟에서만 유의미합니다. SimC 기본 거리는 10야드라 운석 스냅샷 손실은 반영되지 않았습니다.</p>
+
+<h3>4종 비교와 저점 (Advanced, 1타겟 평균)</h3>
+<div class="tbl"><table>
+<thead><tr><th>APL</th><th class="n">평균</th><th class="n">하위 5% 판</th><th class="n">상위 5% 판</th><th class="n">편차</th></tr></thead>
+<tbody>
+<tr><td>기본</td><td class="n">191,972</td><td class="n">175,802</td><td class="n">208,201</td><td class="n">9,838</td></tr>
+<tr><td>Preheat 원본</td><td class="n">192,965 <span class="pos">+0.52%</span></td><td class="n">176,750 <span class="pos">+0.54%</span></td><td class="n">208,947</td><td class="n">9,774</td></tr>
+<tr><td>수정</td><td class="n">192,704 <span class="pos">+0.38%</span></td><td class="n">176,797 <span class="pos">+0.57%</span></td><td class="n">208,562</td><td class="n">9,675</td></tr>
+<tr class="key"><td>수정 + 오색 직후 탄막 삭제</td><td class="n">192,801 <span class="pos">+0.43%</span></td><td class="n">176,904 <span class="pos">+0.63%</span></td><td class="n">208,898</td><td class="n">9,709</td></tr>
+</tbody></table></div>
+<p>Preheat 계열 셋 모두 <b>저점(하위 5%)이 평균보다 더 많이 오릅니다.</b> 운 나쁜 판에서 기본 APL보다 약 1,000 DPS를 더 지킵니다. 세 변형끼리의 하위 5% 차이(최대 154)는 오차 범위라 구분되지 않습니다. 반면 하위 5%와 상위 5% 판 사이 폭은 어느 APL이든 약 32,000(평균의 약 17%)입니다. 이 폭은 순서가 아니라 확률에서 오는 몫입니다.</p>
+
+<h2 id="s5">딜사이클</h2>
+<p>기본 구조는 샌드위치입니다. <b>신비한 화살로 시작해 비전 탄막으로 끝나고</b>, 그 사이는 버프 상태로 정해집니다. 확인할 것은 번뜩임 개수, 오색 화살 유무, 연사가 24 이상인지 세 가지뿐입니다.</p>
+
+<h3>우선순위 (수정 Preheat, 레이드봇 검증)</h3>
+<ol class="prio">
+  <li><b>비전의 영혼 중에는 탄막만.</b> 영혼 직후에도 충전물 4개, 연사 15 이상이면 탄막 1회 더.</li>
+  <li><b>오색 화살 직후 탄막.</b> 연사와 무관. 단 영혼 2GCD 이내면 예외.</li>
+  <li><b>번뜩임이 있으면 신비한 화살.</b> 연사 14 미만일 때, 번뜩임이 남으면 연달아. 영혼 임박이면 연사 무관. 영혼이 뜨면 즉시 끊기.</li>
+  <li><b>오색 화살.</b></li>
+  <li><b>탄막</b>: 비전의 여파 직전 / 연사 24 이상 / 작렬 도중 번뜩임 발동 / 4대상 이상 + 보주 충전 + 충전물 4. 모두 영혼 2GCD 이내면 금지.</li>
+  <li><b>비전 보주</b>: 충전물 2개 이하.</li>
+  <li><b>비전 작렬.</b></li>
+</ol>
+
+<h3>버프 상태별 시퀀스</h3>
+<div class="tbl"><table>
+<thead><tr><th>보유 상태</th><th>시전 순서</th></tr></thead>
+<tbody>
+<tr><td>과부하된 투사체 + 오색 화살</td><td>신비한 화살 → 오색 화살 → 탄막</td></tr>
+<tr><td>번뜩임 2개 + 오색 화살</td><td>신비한 화살 ×2 → 오색 화살 → 탄막</td></tr>
+<tr><td>번뜩임 1개 + 오색 화살</td><td>신비한 화살 → 오색 화살 → 탄막</td></tr>
+<tr class="key"><td>오색 화살만</td><td>오색 화살 → 탄막 (오색이 준 번뜩임으로 다음 세트 시작)</td></tr>
+<tr><td>과부하된 투사체 (오색 없음)</td><td>신비한 화살 → 탄막</td></tr>
+<tr><td>번뜩임 2개 (오색 없음)</td><td>신비한 화살 ×2 → 탄막 (과부하 붙으면 1회 후 탄막)</td></tr>
+<tr><td>번뜩임 1개 (오색 없음)</td><td>신비한 화살 → 작렬 (번뜩임 또는 연사 24까지) → 탄막</td></tr>
+<tr><td>충전물 없음</td><td>보주 → 작렬 (발동까지) → 탄막</td></tr>
+</tbody></table></div>
+<p class="src">광역(4대상 이상)에서는 작렬 자리에 보주가 있으면 탄막을 씁니다. 그 외는 단일과 같습니다.</p>
+
+<h3 id="move">이동·패턴 대응</h3>
+<p>이동하거나 정지 시간이 부족할 때 무엇으로 GCD를 채우는지 정리했습니다. 피해는 스조라크 신화 킬 로그 기준입니다.</p>
+<div class="tbl"><table>
+<thead><tr><th>스킬</th><th>이동 중</th><th>연사</th><th>충전물</th><th>번뜩임 판정</th><th class="n">시전당 피해</th></tr></thead>
+<tbody>
+<tr><td>비전 작렬</td><td>✗ (얼음발 있으면 ○)</td><td>+2</td><td>+1</td><td>○</td><td class="n">약 12만</td></tr>
+<tr><td>신비한 화살</td><td>○ (후방기류)</td><td>파동당 +1</td><td>고전압</td><td>○</td><td class="n">약 26만 (번뜩임 필요)</td></tr>
+<tr><td>비전 탄막</td><td>○</td><td>전부 소모</td><td>전부 소모</td><td>○</td><td class="n">연사·충전물 비례</td></tr>
+<tr><td>비전 보주</td><td>○</td><td>+1</td><td>획득</td><td>○</td><td class="n">충전 필요</td></tr>
+<tr><td>신비한 폭발</td><td>○</td><td>없음</td><td>+1 (10야드 안에 적이 있을 때만)</td><td>○</td><td class="n">약 5천</td></tr>
+</tbody></table></div>
+
+<p><b>영혼 직전, 번뜩임이 안 뜰 때.</b> 정지할 수 있으면 작렬입니다. 기준은 "작렬이 영혼 시작 전에 끝나느냐" 하나로, 쇄도가 약 1.2초 이상 남았으면 작렬, 그보다 적으면 새 시전 없이 대기합니다. 신비한 폭발은 이동해야 할 때나, 충전물이 4개가 안 되는데 보주가 없을 때만 씁니다(첫 영혼 탄막은 진입 충전물로 나감). 보스 10야드 밖이면 충전물을 주지 않아 의미가 없습니다.</p>
+
+<p><b>오색 화살을 들고 밀어내기 같은 패턴이 올 때.</b> 오색 버프는 60초 유지되니 들고 있는 것 자체는 손해가 아닙니다. 손해는 들고 탄막을 칠 때 그 탄막의 오색 판정이 버려지는 것뿐이고, 기대 손실은 연사 12면 약 10만, 25면 약 21만입니다(오색 1발 약 42만 기준).</p>
+<ol class="steps">
+  <li>번뜩임이 있으면 신비한 화살. 이동하며 쓸 수 있고 오색도 보존됩니다.</li>
+  <li>번뜩임이 없으면 보주(충전물 2 이하), 또는 일렁임·얼음발로 오색 캐스팅 완료.</li>
+  <li>둘 다 안 되면 탄막. 연사가 낮을수록 손해가 작습니다.</li>
+</ol>
+<div class="note sun"><p><b>뎀증 구간이면 오색 화살이 최우선입니다.</b> 가장 큰 한 방이라, 1.8초만 서 있을 틈이 있으면 오색 → 탄막으로 넣습니다. 틈이 없으면 신화(번뜩임), 그다음이 연사 높은 탄막입니다.</p></div>
+
+<p><b>강제 이동 중, 탄막 직후(연사 0, 충전물 0), 번뜩임 없음.</b> 작렬을 못 치면 아래 순서로 채웁니다.</p>
+<ol class="steps">
+  <li>비전 보주 (충전이 있으면)</li>
+  <li>신비한 폭발: 보스 10야드 안일 때만. 충전물 +1, 번뜩임 판정으로 가뭄 카운터 상승</li>
+  <li>얼음발 (특성이 있다면)</li>
+  <li>탄막: 피해는 작지만 즉시 시전이고 번뜩임 판정은 굴러감. 아무것도 안 하는 것보다 나음</li>
+</ol>
+<p>더 좋은 해법은 <b>이동 전에 번뜩임을 남겨 두는 것</b>입니다. 이동 구간을 미리 알면 서 있을 때 작렬·오색을 쓰고, 번뜩임은 이동 구간의 신화로 넘깁니다. 평소에는 이탈인 "번뜩임 두고 작렬"이 이동 직전에는 맞는 판단입니다. 번뜩임은 최대 3개이니 넘치지 않게만 관리합니다.</p>
+
+<p><b>연사 25인데 번뜩임이 있고 이동 중일 때.</b> 탄막 → 신화입니다. 둘 다 이동 중에 쓸 수 있으니 순서를 바꿀 이유가 없습니다. 25에서 신화를 먼저 쓰면 파동 연사(약 11)가 전부 버려집니다. 예외는 영혼 2GCD 이내뿐이고, 이때는 연사 25를 영혼에 들고 가야 하니 탄막 없이 신화입니다.</p>
+
+<h2 id="s6">자주 헷갈리는 상황</h2>
+
+<h3>기존 방식은 오색 화살을 띄우는 게 핵심 아닌가?</h3>
+<p>오색 화살 기대 개수는 "소모한 연사 총량 × 2%"입니다. 탄막을 12에서 치든 25에서 치든, 같은 양의 연사를 소모하면 기대 개수는 같습니다. 12중첩 조기 탄막은 오색을 더 뽑는 기술이 아니라, 충전물을 자주 돌리고 25 초과로 버려지는 연사를 줄이는 기술입니다.</p>
+<p>오색 화살 개수를 실제로 늘리는 방법은 세 가지입니다.</p>
+<ul>
+  <li>25에서 연사가 넘쳐 버려지지 않게 하기</li>
+  <li>오색 화살을 들고 있는 동안 탄막을 치지 않기 (새 발동이 갱신으로 버려짐)</li>
+  <li>비전의 영혼 탄막을 최대한 많이 치기 (소모 없이 판정만 반복)</li>
+</ul>
+<p>두 번째에서 차이가 납니다. 기본 APL은 축적된 힘 8중첩을 기다리며 오색 화살을 들고 있는 동안에도 25중첩 탄막이 우선합니다. Preheat 방식은 영혼을 빼면 항상 오색 화살을 먼저 쓰고 탄막을 칩니다.</p>
+
+<h3>신비한 화살 두 번 후 25가 안 될 때</h3>
+<p>번뜩임도 오색도 없고 연사가 25 미만이면, Preheat 규칙은 "작렬을 번뜩임이 뜨거나 연사 24가 될 때까지"입니다. 작렬은 연사 +2이므로 몇 번 쓸지가 정해집니다.</p>
+<div class="tbl"><table>
+<thead><tr><th class="n">현재 연사</th><th>행동</th><th>탄막 시 연사</th></tr></thead>
+<tbody>
+<tr class="key"><td class="n">24~25</td><td>즉시 탄막</td><td>24 또는 25</td></tr>
+<tr><td class="n">23</td><td>작렬 1 → 탄막</td><td>25 (직관력)</td></tr>
+<tr><td class="n">22</td><td>작렬 1 → 탄막</td><td>24 (직관력 없음)</td></tr>
+<tr><td class="n">20~21</td><td>작렬 2 → 탄막</td><td>24~25</td></tr>
+<tr><td class="n">19 이하</td><td>작렬 반복 (충전물 2 이하면 보주 먼저)</td><td>24 이상</td></tr>
+<tr><td class="n">작렬 중 번뜩임</td><td>연사 무관 즉시 탄막 → 그 번뜩임으로 신비한 화살 (다음 세트)</td><td>그때 중첩</td></tr>
+</tbody></table></div>
+<div class="note"><p><b>24에서 치는 게 맞습니다 (심 확인).</b> 24 탄막은 직관력을 놓치지만(×1.72 vs ×2.19), 25를 채우려고 작렬을 한 번 더 치는 버전(Wait25)은 평균 −0.13%로 유의미하게 낮았습니다. 작렬은 +2라 24→26에서 1중첩이 버려지고, 탄막이 한 GCD 늦어지는 손해가 직관력 이득보다 큽니다. 신비한 화살 파동으로 25에 딱 맞게 닿았을 때만 직관력이 붙는다고 생각하면 됩니다.</p></div>
+
+<h3>오색 화살만 있을 때: 오색 → 탄막 → 신화 vs 오색 → 신화 → 작렬 → 25 탄막</h3>
+<p>오색 화살을 쓰면 연사 +4, 충전물 4개, 번뜩임 1개(2랭크 2점)가 생깁니다. 여기서 갈리는 두 방식입니다.</p>
+<ul>
+  <li><b>A (Preheat):</b> 오색 → 탄막 → 신화 → 작렬로 24까지 → 탄막</li>
+  <li><b>B (기존):</b> 오색 → 신화 → 작렬로 25까지(번뜩임 뜨면 12 이상에서 탄막) → 탄막</li>
+</ul>
+<p>먼저 짚을 점이 있습니다. 기존 APL도 오색 후 연사가 12 이상이면 "번뜩임 + 12중첩" 규칙으로 바로 탄막을 칩니다. <b>두 방식이 실제로 갈리는 건 오색 후 연사가 12 미만일 때뿐</b>, 즉 탄막 직후에 오색이 뜬 경우입니다. 내 로그에서 오색 직후 탄막 20회 중 12회는 이미 25중첩이라 어느 방식이든 같았고, 갈리는 상황은 6회였습니다.</p>
+<div class="tbl"><table>
+<thead><tr><th>비교</th><th>A: 오색 → 탄막 → 신화</th><th>B: 오색 → 신화 → 작렬 → 탄막</th></tr></thead>
+<tbody>
+<tr><td>오색이 준 충전물 4개</td><td>저중첩 탄막으로 즉시 소모. 뒤의 신화 파동에서 고전압이 다시 채움</td><td>작렬에 사용. 신화 중 고전압 회수는 충전물이 가득 차서 전부 버려짐</td></tr>
+<tr><td>탄막 횟수</td><td>1회 더 (연사 4~12 탄막)</td><td>1회 적음</td></tr>
+<tr><td>직관력</td><td>다음 탄막이 24에서 나가면 놓침</td><td>25에서 탄막해 확보</td></tr>
+<tr><td>오색 화살 기대 개수</td><td colspan="2">거의 같음. 소모 연사 총량에 비례하기 때문</td></tr>
+<tr><td>판단 부담</td><td>번뜩임·오색만 확인</td><td>연사 숫자를 계속 확인</td></tr>
+</tbody></table></div>
+<p>한 줄로 요약하면 <b>A는 "고전압이 공짜로 되채워 주는 충전물로 탄막 한 발을 더 치는" 방식이고, B는 "그 탄막을 포기하고 다음 탄막에 직관력 25%를 챙기는" 방식</b>입니다. 로그 수치로 보면 A가 얻는 저중첩 탄막은 약 8만(비치명) + 운석 1~3개 + 오색 판정 8~24%이고, B가 얻는 직관력은 25중첩 탄막의 약 20% 몫인 약 3만입니다. 대신 A는 그 탄막에 GCD 하나를 더 씁니다.</p>
+<div class="note"><p><b>결론: 한 번 발생할 때 차이가 수만 단위라 체감상 별 차이 없는 게 맞습니다.</b> 추가 심 (f)로 이 선택만 분리해 보니 평균 차이 약 0.05%, 하위 5% 판 차이도 오차 범위였습니다. <b>편한 쪽을 쓰면 됩니다.</b></p></div>
+
+<h3>프록 가뭄: 저점 방어</h3>
+<p>번뜩임 누적 확률 모델로, 프록을 막 소모하고 연사 0인 상태에서 "번뜩임 발동 또는 24중첩 탄막 오색 발동"까지 걸리는 시간을 20만 회 시뮬레이션했습니다.</p>
+<div class="tbl"><table>
+<thead><tr><th>가뭄 길이</th><th class="n">확률</th></tr></thead>
+<tbody>
+<tr><td>5초 넘게</td><td class="n">83%</td></tr>
+<tr><td>10초 넘게</td><td class="n">49%</td></tr>
+<tr class="key"><td>15초 넘게</td><td class="n">8%</td></tr>
+<tr><td>20초 넘게</td><td class="n">2%</td></tr>
+</tbody></table></div>
+<p>중앙값은 약 9초이고, 거의 항상 15초 안에 끝납니다. 가뭄 중에는 다음 네 가지만 반복합니다.</p>
+<ol class="steps">
+  <li>충전물 2개 이하면 비전 보주</li>
+  <li>비전 작렬 연타 (연사 +2씩, 번뜩임 확률은 매번 상승)</li>
+  <li>작렬 도중 번뜩임이 뜨면 즉시 탄막, 그 번뜩임으로 신비한 화살</li>
+  <li>연사 24가 되면 탄막 (오색 48%)</li>
+</ol>
+<p>조급해서 연사 10 근처에서 탄막을 치면 오색 기대 개수는 그대로인데 충전물과 GCD만 쓰고 가뭄은 길어집니다.</p>
+
+<h3>눈으로 확인할 수 있나?</h3>
+<p>네, 이 방식은 네 가지만 화면에 크게 띄우면 됩니다.</p>
+<ul>
+  <li><b>비전 연사 중첩 숫자.</b> 14와 24 두 기준만 보면 됩니다.</li>
+  <li><b>직관력 아이콘.</b> 25에 도달하는 순간 뜹니다. 뜨면 탄막 신호입니다.</li>
+  <li><b>번뜩임 개수와 오색 화살 버프.</b> 샌드위치 가운데 재료입니다.</li>
+  <li><b>비전 쇄도 남은 시간.</b> 쇄도가 끝나는 순간 영혼이 시작되니, 이것이 곧 영혼 카운트다운입니다.</li>
+</ul>
+
+<h2 id="s7">비전의 영혼 준비</h2>
+<p>비전 불사조는 비전 쇄도 동안 유지되고, 사라질 때 영혼이 4초간 부여됩니다. 아래 T는 비전 쇄도 남은 시간입니다. 2GCD는 평소 약 2.2초, 블러드 중 약 1.6초입니다.</p>
+
+<div class="tl" role="img" aria-label="영혼 8초 전부터 영혼 종료까지의 구간">
+  <div class="tlbar">
+    <div class="z1" style="flex:3.8">마지막 세트</div>
+    <div class="z2" style="flex:1.8">오색은 끝낼 수 있을 때만</div>
+    <div class="z3" style="flex:1.7">탄막 금지</div>
+    <div class="z4" style="flex:.5">대기</div>
+    <div class="z5" style="flex:4">비전의 영혼 · 탄막만</div>
+  </div>
+  <div class="tlaxis"><span>−8초</span><span>−4초</span><span>−2.2초</span><span>0</span><span>+4초</span></div>
+</div>
+
+<h3>진입 목표</h3>
+<div class="tbl"><table>
+<thead><tr><th class="n">진입 연사</th><th class="n">영혼 가치 (탄막 4회)</th><th class="n">영혼 가치 (탄막 3회)</th></tr></thead>
+<tbody>
+<tr class="key"><td class="n">25</td><td class="n">100%</td><td class="n">100%</td></tr>
+<tr><td class="n">20</td><td class="n">98.0%</td><td class="n">97.4%</td></tr>
+<tr><td class="n">15</td><td class="n">93.9%</td><td class="n">92.1%</td></tr>
+<tr><td class="n">10</td><td class="n">87.9%</td><td class="n">76.5%</td></tr>
+<tr><td class="n">5</td><td class="n">73.9%</td><td class="n">68.6%</td></tr>
+<tr><td class="n">0 (직전 탄막)</td><td class="n">65.9%</td><td class="n">60.7%</td></tr>
+</tbody></table></div>
+<p>나머지 목표는 셋입니다. 충전물 4개(첫 영혼 탄막은 진입 충전물로 나감), 번뜩임 0(영혼 탄막마다 들어와 넘침), 오색 화살 없음(영혼 판정이 버려짐).</p>
+
+<h3>케이스별 판단</h3>
+<div class="tbl"><table>
+<thead><tr><th>남은 시간 (T)</th><th>상태</th><th>행동</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td>T &gt; 4초</td><td>오색 화살 보유</td><td>오색 → 탄막 → 번뜩임으로 신비한 화살 ×2</td><td>오색이 T 2.2초 전에 끝나면 탄막 허용. 신비한 화살로 연사 재충전</td></tr>
+<tr><td>T &gt; 4초</td><td>번뜩임 1~2</td><td>평소 샌드위치</td><td>재충전 시간 충분</td></tr>
+<tr><td>T &gt; 4초</td><td>연사 24 이상, 번뜩임 없음</td><td>탄막 (규칙대로)</td><td>이후 작렬만으로 채우면 진입 연사가 낮아짐. 회색지대, 추가 심 (e)</td></tr>
+<tr><td>4 ~ 2.2초</td><td>오색 발동</td><td>오색 시전. 끝난 시점이 2.2초 미만이면 탄막 대신 신비한 화살</td><td>오색이 번뜩임을 보장하니 신비한 화살로 연사 채우며 진입</td></tr>
+<tr><td>4 ~ 2.2초</td><td>번뜩임 없음, 연사 24 미만</td><td>작렬 (충전물 2 이하면 보주)</td><td>연사·충전물 동시 확보</td></tr>
+<tr class="key"><td>T ≤ 2.2초</td><td>번뜩임 있음</td><td>신비한 화살, 남으면 연달아. 연사 무관</td><td>탄막 금지 구간. 번뜩임 비우기 + 연사 채우기</td></tr>
+<tr><td>T ≤ 2.2초</td><td>번뜩임 없음</td><td>작렬, 충전물 2 이하면 보주</td><td>탄막 금지 구간</td></tr>
+<tr><td>T ≤ 2.2초</td><td>오색 화살 보유</td><td>T가 오색 시전시간(약 1.8초) 이상이면 시전, 아니면 보류</td><td>영혼 중 오색 시전은 탄막 두 번을 날림</td></tr>
+<tr class="key"><td>T ≤ 0.5초</td><td>무엇이든</td><td>새 시전 시작 금지</td><td>작렬이 영혼 시작을 넘기면 첫 탄막이 늦어짐</td></tr>
+<tr class="key"><td>영혼 시작</td><td>신비한 화살 채널 중</td><td>즉시 끊고 탄막</td><td>레이드봇 검증된 한 줄 규칙</td></tr>
+<tr><td>영혼 중</td><td>오색 발동·보유</td><td>쓰지 않고 탄막 연타, 영혼 후 사용</td><td>두 APL 공통</td></tr>
+<tr><td>영혼 중</td><td>연사 낮게 진입</td><td>그래도 탄막 연타</td><td>탄막마다 +5로 복구</td></tr>
+<tr><td>영혼 직후</td><td>연사 25, 충전물 4</td><td>탄막 1회 → 오색 → 신비한 화살</td><td>이 탄막도 겹침 체인에 포함되니 거리 유지</td></tr>
+</tbody></table></div>
+
+<h3>영혼 4초 동안의 디테일</h3>
+<ul>
+  <li><b>거리 20야드 이내, 블러드 중 15야드.</b> 탄막 비행시간이 탄막 간격보다 길면 겹친 체인 마지막 탄막의 운석이 사라집니다.</li>
+  <li><b>움직이는 쫄보다 보스나 고정 대상에 탄막.</b> 운석은 소환 시점 위치에 1초 뒤 떨어집니다.</li>
+  <li><b>첫 탄막은 영혼 시작 0.3초 안에.</b> 영혼은 4초 고정이라 지연이 곧 탄막 손실입니다.</li>
+</ul>
+
+<h2 id="s8">내 로그 리뷰</h2>
+<p class="src">악성의 바쉬니크 신화 킬. 시간은 영혼 적용 기준(0), 거리는 탄막 비행시간 × 24야드 추정.</p>
+<div class="tbl"><table>
+<thead><tr><th>영혼</th><th>직전 시퀀스</th><th class="n">첫 탄막</th><th class="n">거리</th><th>운석</th><th>평가</th></tr></thead>
+<tbody>
+<tr><td>#1 0:17 (블러드)</td><td>−2.83 탄막 → −2.07 보주 → −1.09 신비한 화살 → <b>영혼 중 작렬</b></td><td class="n">+0.97</td><td class="n">15야드</td><td>3·5·6·6·6</td><td><span class="neg">영혼 중 작렬, 첫 탄막 1초 지연, 진입 연사 12</span> (연사 로그 확인)</td></tr>
+<tr><td>#2 1:51</td><td>−4.29 탄막 → −3.24 신비한 화살 → −1.88 신비한 화살</td><td class="n">+0.22</td><td class="n">20야드</td><td>6·6·6·6</td><td><span class="pos">모범</span></td></tr>
+<tr><td>#3 3:27</td><td>오색(−3.63 완료) → 탄막 → −2.59 신비한 화살 → −1.15 신비한 화살</td><td class="n">+0.46</td><td class="n">26야드</td><td>0·5·<b>0</b>·6·6</td><td>순서 좋음. <span class="neg">거리로 운석 1묶음 손실</span>, 보스 이동 추정 1묶음</td></tr>
+<tr><td>#4 4:59</td><td>오색(−3.44 완료) → 탄막 → −2.37 신비한 화살 → −0.39 신비한 화살</td><td class="n">+0.72</td><td class="n">31야드</td><td>6·6·6·<b>0</b></td><td>순서 좋음. <span class="neg">거리로 1묶음 손실, 채널 끊기 약 0.5초 늦음</span></td></tr>
+</tbody></table></div>
+<p>정리하면 순서 운영은 이미 Preheat 방식에 가깝습니다(오색 직후 탄막 21/30회). 개선점은 세 가지입니다. 영혼 0.5초 전 새 시전 금지, 영혼이 뜨면 즉시 채널 끊기, 영혼 4초는 20야드 안에서.</p>
+
+<h2 id="s9">검증 현황과 추가 심</h2>
+<div class="tbl"><table>
+<thead><tr><th>항목</th><th>상태</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>Preheat(수정) &gt; 기본 APL</td><td><span class="tag ok">확인</span></td><td>레이드봇 9건 + Advanced 4종 비교, 루나쿼츠</td></tr>
+<tr><td>연사 24 탄막 vs 25 대기</td><td><span class="tag ok">확인</span></td><td>24가 우세 (25 대기 평균 −0.13%, 오차의 약 3.7배)</td></tr>
+<tr><td>오색만 있을 때 탄막 먼저 vs 신화 먼저</td><td><span class="tag ok">확인</span></td><td>차이 없음 (평균 차 0.05%, 오차 범위)</td></tr>
+<tr><td>운석 스냅샷 버그</td><td><span class="tag ok">확인</span></td><td>로그 4구간 대조, 예측한 탄막만 0개</td></tr>
+<tr><td>Meteorite = 유성 파편</td><td><span class="tag ok">확인</span></td><td>WarcraftLogs 한글 리포트</td></tr>
+<tr><td>+1 운석 버그</td><td><span class="tag ok">확인</span></td><td>연사 로그 대조: 20~24 → 5개, 25 → 6개 최빈</td></tr>
+<tr><td>신비한 화살 1회 연사 획득량</td><td><span class="tag ok">확인</span></td><td>연사 로그 29회: 중앙값 11, 평균 12.1 (파동 약 8회)</td></tr>
+<tr><td>번뜩임 누적 확률</td><td><span class="tag wait">추정</span></td><td>SimC 모델, 블리자드 미공개</td></tr>
+<tr><td>영혼 중 직관력 (첫 탄막만)</td><td><span class="tag wait">추정</span></td><td>SimC 구현</td></tr>
+<tr><td>25중첩 연사 +75%</td><td><span class="tag wait">대기</span></td><td>툴팁은 최대 60% 표기, SimC는 75%</td></tr>
+</tbody></table></div>
+
+<h3>추가 심</h3>
+<p>수정 APL에서 한 줄씩만 바꿔 1타겟으로 돌립니다.</p>
+<p><b>(e) 영혼 대비 3GCD:</b> soul_soon 줄의 2를 3으로.</p>
+<pre>actions.sunfury=variable,name=soul_soon,op=set,value=buff.arcane_surge.up&amp;buff.arcane_surge.remains&lt;(gcd.max*3)</pre>
+<p><b>(f) 오색 후 신화 먼저:</b> 아래 줄을 삭제. 오색 직후 탄막 대신 번뜩임 신화가 먼저 나갑니다.</p>
+<pre>actions.sunfury+=/arcane_barrage,if=prev_gcd.1.prismatic_bolt&amp;!variable.soul_soon</pre>
+
+<h2 id="s10">용어</h2>
+<div class="tbl"><table>
+<thead><tr><th>English</th><th>한국어</th><th>English</th><th>한국어</th></tr></thead>
+<tbody>
+<tr><td>Arcane Barrage</td><td>비전 탄막</td><td>Arcane Salvo</td><td>비전 연사</td></tr>
+<tr><td>Arcane Blast</td><td>비전 작렬</td><td>Clearcasting</td><td>번뜩임</td></tr>
+<tr><td>Arcane Missiles</td><td>신비한 화살</td><td>Overpowered Missiles</td><td>과부하된 투사체</td></tr>
+<tr><td>Prismatic Bolt</td><td>오색 화살</td><td>Intuition</td><td>직관력</td></tr>
+<tr><td>Arcane Orb</td><td>비전 보주</td><td>Orb Barrage</td><td>보주 탄막</td></tr>
+<tr><td>Arcane Surge</td><td>비전 쇄도</td><td>Arcane Soul</td><td>비전의 영혼</td></tr>
+<tr><td>Touch of the Magi</td><td>비전의 여파</td><td>Aegwynn's Technique</td><td>에이그윈의 기술</td></tr>
+<tr><td>Arcane Charge</td><td>비전 충전물</td><td>High Voltage</td><td>고전압</td></tr>
+<tr><td>Expanded Mind</td><td>정신 확장</td><td>Focusing Crystal</td><td>집중의 수정</td></tr>
+<tr><td>Spellfire Salvo</td><td>비전화염 연사</td><td>Glorious Incandescence</td><td>영광스러운 광채</td></tr>
+<tr><td>Pyrocosm</td><td>화염계</td><td>Meteorite</td><td>유성 파편</td></tr>
+<tr><td>Cumulative Power</td><td>축적된 힘</td><td>Memory of Al'ar</td><td>알라르의 기억</td></tr>
+<tr><td>Sunfury</td><td>성난태양</td><td>Arcane Phoenix</td><td>비전 불사조</td></tr>
+</tbody></table></div>
+</main>
+
+<footer>
+  <p>출처: SimulationCraft midnight 브랜치 (sc_mage.cpp, 스펠 데이터, 기본 APL), Preheat 공개 APL, Icy Veins · Method 비전 가이드, 루나쿼츠 레이드봇 심 9건, WarcraftLogs 악성의 바쉬니크 신화 킬 (2026-09-27). 작성 2026-09-28.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  var cells=document.getElementById('cells'), ticks=document.getElementById('ticks');
+  var btns=[];
+  function show(n){
+    btns.forEach(function(b,i){b.classList.toggle('on',i<n);b.setAttribute('aria-pressed',i===n-1?'true':'false')});
+    var m=(1+0.03*n)*(n===25?1.25:1);
+    document.getElementById('r-mult').textContent='×'+m.toFixed(2);
+    document.getElementById('r-pb').textContent=(2*n)+'%';
+    document.getElementById('r-orb').textContent=Math.min(4*n,100)+'%';
+    document.getElementById('r-met').textContent=(n>0?Math.floor(n/5)+1:0)+'개';
+  }
+  for(var i=1;i<=25;i++){
+    var b=document.createElement('button');
+    b.type='button';b.className='cell'+(i===25?' cap':'');
+    b.setAttribute('aria-label','연사 '+i+'중첩');
+    b.textContent=i;
+    (function(n){b.addEventListener('click',function(){show(n)});
+      b.addEventListener('mouseenter',function(){show(n)});})(i);
+    cells.appendChild(b);btns.push(b);
+    var t=document.createElement('span');t.textContent=(i===1||i%5===0)?i:'';ticks.appendChild(t);
+  }
+  show(25);
+})();
+</script>
+</body>
+</html>
